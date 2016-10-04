@@ -7,6 +7,7 @@ var imgRight = document.getElementById('right');
 var indexOne = 0;
 var indexTwo = 0;
 var indexThree = 0;
+var itemVote = 0;
 var itemCatalog = [];
 
 function ItemLog(image, filePath) {
@@ -44,7 +45,7 @@ function pictureRandomize(){
   while (indexOne === indexTwo) {
     indexTwo = Math.floor(Math.random() * itemCatalog.length);
   }
-indexThree = Math.floor(Math.random() * itemCatalog.length);
+  indexThree = Math.floor(Math.random() * itemCatalog.length);
   while (indexThree === indexTwo || indexThree === indexOne){
     indexThree = Math.floor(Math.random() * itemCatalog.length);
   }
@@ -57,17 +58,58 @@ indexThree = Math.floor(Math.random() * itemCatalog.length);
   imgRight.src = itemCatalog[indexThree].filePath;
   imgRight.alt = itemCatalog[indexThree].image;
 
-  itemCatalog[indexOne].totalDisplayed = itemCatalog[indexOne].totalDisplayed + 1;
-  itemCatalog[indexTwo].totalDisplayed = itemCatalog[indexTwo].totalDisplayed + 1;
-  itemCatalog[indexThree].totalDisplayed =
-  itemCatalog[indexThree].totalDisplayed + 1;
+  itemCatalog[indexOne].totalDisplayed += itemCatalog[indexOne].totalDisplayed;
+  itemCatalog[indexTwo].totalDisplayed += itemCatalog[indexTwo].totalDisplayed;
+  itemCatalog[indexThree].totalDisplayed +=
+  itemCatalog[indexThree].totalDisplayed;
 }
-function imgSelection(){
-
+function imgtallySelection(){
+  for (var i = 0; i < itemCatalog.length; i++) {
+    var listEl = document.createElement('li');
+    listEl.textContent = itemCatalog[i].image + ' appeared ' + itemCatalog[i].totalDisplayed + ' times, and was chosen ' + itemCatalog[i].totalClicks + ' times.';
+    results.appendChild(listEl);
+  }
 }
 
-
-
-
+function userSelection(){
+  var userChoice = event.target.id;
+  console.log(userChoice);
+  if (userChoice === 'left'){
+    console.log('User chose left item.');
+    itemVote += 1;
+    console.log('This is round ' + (parseInt(itemVote) + 1));
+    itemCatalog[indexOne].totalClicks += 1;
+    console.log(itemCatalog[indexOne].image + ' chosen ' + itemCatalog[indexOne].totalClicks + ' times.');
+  }
+  else if (userChoice === 'center'){
+    console.log('User chose center item.');
+    itemVote += 1;
+    console.log('This is round ' + (parseInt(itemVote) + 1));
+    itemCatalog[indexTwo].totalClicks += 1;
+    console.log(itemCatalog[indexTwo].image + ' chosen ' + itemCatalog[indexTwo].totalClicks + ' times.');
+  }
+  else if (userChoice === 'right'){
+    console.log('User chose right item.');
+    itemVote += 1;
+    console.log('This is round ' + (parseInt(itemVote) + 1));
+    itemCatalog[indexThree].totalClicks += 1;
+    console.log(itemCatalog[indexThree].image + ' chosen ' + itemCatalog[indexThree].totalClicks + ' times.');
+  }
+  else {
+    alert('Please select one of the images.');
+  }
+  if (itemVote < 25) {
+    console.log(itemVote, ' total votes.');
+    pictureRandomize();
+  }
+  else {
+    threePics.removeEventListener('click',userSelection);
+    var button = document.createElement('button');
+    button.textContent = 'Survey completed. Please select here.';
+    threePics.appendChild(button);
+    button.addEventListener('click',userSelection);
+  }
+}
 
 pictureRandomize();
+threePics.addEventListener('click',userSelection);
