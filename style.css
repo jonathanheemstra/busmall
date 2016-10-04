@@ -1,0 +1,23 @@
+body {
+  margin: 0 auto;
+  height: auto;
+  font-family: Helvetica, sans-serif;
+}
+
+header {
+  color: black;
+  height: auto;
+  padding: 10px 2px;
+  text-align: center;
+}
+.three-pics {
+al
+}
+
+p {
+  text-align: center;
+}
+
+img {
+  max-height: 180px;
+}
