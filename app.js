@@ -15,34 +15,55 @@ var selections = [];
 var itemNames = [];
 var chartResults;
 
-function ItemLog(image, filePath) {
+function ItemLog(image, filePath, timesClicked, timesDisplayed) {
   this.image = image;
   this.filePath = filePath;
-  this.totalClicks = 0;
-  this.totalDisplayed = 0;
+  this.totalClicks = timesClicked || 0;
+  this.totalDisplayed = timesDisplayed || 0;
   itemCatalog.push(this);
 }
 
-var bag = new ItemLog('Bag','img/bag.jpg');
-var banana = new ItemLog('Banana','img/banana.jpg');
-var bathroom = new ItemLog('Bathroom','img/bathroom.jpg');
-var boots = new ItemLog('Boots', 'img/boots.jpg');
-var breakfast = new ItemLog('Breakfast', 'img/breakfast.jpg');
-var bubblegum = new ItemLog('Bubblegum','img/bubblegum.jpg');
-var chair = new ItemLog ('Chair', 'img/chair.jpg');
-var cthulhu = new ItemLog('Cthulhu', 'img/cthulhu.jpg');
-var dogDuck = new ItemLog('Dog Duck','img/dog-duck.jpg');
-var dragon = new ItemLog('Dragon', 'img/dragon.jpg');
-var pen = new ItemLog('Pen', 'img/pen.jpg');
-var petSweep = new ItemLog('Pet Sweep', 'img/pet-sweep.jpg');
-var scissors = new ItemLog('Scissors', 'img/scissors.jpg');
-var shark = new ItemLog('Shark', 'img/shark.jpg');
-var sweep = new ItemLog('Sweep', 'img/sweep.png');
-var tauntaun= new ItemLog('Tauntaun', 'img/tauntaun.jpg');
-var unicorn = new ItemLog('Unicorn','img/unicorn.jpg');
-var usb = new ItemLog('Usb', 'img/usb.gif');
-var waterCan = new ItemLog('Watering Can', 'img/water-can.jpg');
-var wineGlass = new ItemLog('Wine Glass', 'img/wine-glass.jpg');
+if (localStorage.getItem('products')) {
+  var productsStringified = localStorage.getItem('products');
+  var productsUnstringified = JSON.parse(productsStringified);
+  console.log(productsUnstringified);
+  for (var i = 0; i < productsUnstringified.length; i++) {
+    var currentProduct = productsUnstringified[i];
+    new ItemLog(
+      currentProduct.image,
+      currentProduct.filePath,
+      currentProduct.totalClicks,
+      currentProduct.totalDisplayed);
+  }
+} else {
+  new ItemLog('Bag','img/bag.jpg');
+  new ItemLog('Banana','img/banana.jpg');
+  new ItemLog('Bathroom','img/bathroom.jpg');
+  new ItemLog('Boots', 'img/boots.jpg');
+  new ItemLog('Breakfast', 'img/breakfast.jpg');
+  new ItemLog('Bubblegum','img/bubblegum.jpg');
+  new ItemLog ('Chair', 'img/chair.jpg');
+  new ItemLog('Cthulhu', 'img/cthulhu.jpg');
+  new ItemLog('Dog Duck','img/dog-duck.jpg');
+  new ItemLog('Dragon', 'img/dragon.jpg');
+  new ItemLog('Pen', 'img/pen.jpg');
+  new ItemLog('Pet Sweep', 'img/pet-sweep.jpg');
+  new ItemLog('Scissors', 'img/scissors.jpg');
+  new ItemLog('Shark', 'img/shark.jpg');
+  new ItemLog('Sweep', 'img/sweep.png');
+  new ItemLog('Tauntaun', 'img/tauntaun.jpg');
+  new ItemLog('Unicorn','img/unicorn.jpg');
+  new ItemLog('Usb', 'img/usb.gif');
+  new ItemLog('Watering Can', 'img/water-can.jpg');
+  new ItemLog('Wine Glass', 'img/wine-glass.jpg');
+}
+
+function clickStorage () {
+  console.log('click storage');
+  var productsStringified = JSON.stringify(itemCatalog);
+  localStorage.setItem('products', productsStringified);
+}
+
 
 function pictureRandomize(){
   indexOne = Math.floor(Math.random() * itemCatalog.length);
@@ -122,7 +143,7 @@ function chartDrawing(){
 //   }
 // }
 
-function userSelection(){
+function userSelection(event){
   console.log('userSelection');
   var userChoice = event.target.id;
   console.log(userChoice);
@@ -132,6 +153,7 @@ function userSelection(){
     console.log('This is round ' + itemVote + 1);
     itemCatalog[indexOne].totalClicks += 1;
     console.log(itemCatalog[indexOne].image + ' chosen ' + itemCatalog[indexOne].totalClicks + ' times.');
+    clickStorage();
   }
   else if (userChoice === 'center'){
     console.log('User chose center item.');
@@ -139,6 +161,7 @@ function userSelection(){
     console.log('This is round ' + itemVote + 1);
     itemCatalog[indexTwo].totalClicks += 1;
     console.log(itemCatalog[indexTwo].image + ' chosen ' + itemCatalog[indexTwo].totalClicks + ' times.');
+    clickStorage();
   }
   else if (userChoice === 'right'){
     console.log('User chose right item.');
@@ -146,6 +169,7 @@ function userSelection(){
     console.log('This is round ' + itemVote + 1);
     itemCatalog[indexThree].totalClicks += 1;
     console.log(itemCatalog[indexThree].image + ' chosen ' + itemCatalog[indexThree].totalClicks + ' times.');
+    clickStorage();
   }
   else {//good here
     alert('Please select one of the images.');
