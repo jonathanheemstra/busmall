@@ -4,11 +4,16 @@ var threePics = document.getElementById('three-pics');
 var imgLeft = document.getElementById('left');
 var imgCenter = document.getElementById('center');
 var imgRight = document.getElementById('right');
-var indexOne = 0;
-var indexTwo = 0;
-var indexThree = 0;
-var itemVote = 0;
-var itemCatalog = [];
+var indexOne = 0; //counter for left pane
+var indexTwo = 0; //counter for center pane
+var indexThree = 0; //counter for right pane
+var itemVote = 0; //vote counter
+var itemCatalog = []; //catalog for each respective image
+var lastItemIndex = [0, 1, 2];
+var indexSave = [];
+var selections = [];
+var itemNames = [];
+var chartResults;
 
 function ItemLog(image, filePath) {
   this.image = image;
@@ -33,7 +38,7 @@ var petSweep = new ItemLog('Pet Sweep', 'img/pet-sweep.jpg');
 var scissors = new ItemLog('Scissors', 'img/scissors.jpg');
 var shark = new ItemLog('Shark', 'img/shark.jpg');
 var sweep = new ItemLog('Sweep', 'img/sweep.png');
-var tauntaun= new ItemLog('Tauntaun','img/tauntaun.jpg');
+var tauntaun= new ItemLog('Tauntaun', 'img/tauntaun.jpg');
 var unicorn = new ItemLog('Unicorn','img/unicorn.jpg');
 var usb = new ItemLog('Usb', 'img/usb.gif');
 var waterCan = new ItemLog('Watering Can', 'img/water-can.jpg');
@@ -51,6 +56,16 @@ function pictureRandomize(){
   }
   console.log(indexOne, indexTwo, indexThree);
 
+  indexSave.push(indexOne);
+  indexSave.push(indexTwo);
+  indexSave.push(indexThree);
+
+  lastItemIndex = [];
+  lastItemIndex.push(indexOne);
+  lastItemIndex.push(indexTwo);
+  lastItemIndex.push(indexThree);
+  indexSave = [];
+
   imgLeft.src = itemCatalog[indexOne].filePath;
   imgLeft.alt = itemCatalog[indexOne].image;
   imgCenter.src = itemCatalog[indexTwo].filePath;
@@ -63,39 +78,76 @@ function pictureRandomize(){
   itemCatalog[indexThree].totalDisplayed +=
   itemCatalog[indexThree].totalDisplayed;
 }
-function imgtallySelection(){
+
+function chartFiller(){
+  console.log('chartFiller');
   for (var i = 0; i < itemCatalog.length; i++) {
-    var listEl = document.createElement('li');
-    listEl.textContent = itemCatalog[i].image + ' appeared ' + itemCatalog[i].totalDisplayed + ' times, and was chosen ' + itemCatalog[i].totalClicks + ' times.';
-    results.appendChild(listEl);
+    itemNames[i] = itemCatalog[i].image;
+    selections[i] = itemCatalog[i].totalClicks;
   }
 }
+console.log('selections', selections);
+var data = {
+  labels: itemNames,
+  datasets: [
+    {
+      label: 'total clicks',
+      data: selections,
+    }]
+};
+
+function chartDrawing(){
+  console.log('chartDrawing');
+  var chartContext = document.getElementById('result-chart').getContext('2d');
+  var resultChart = new Chart(chartContext, {
+    type: 'bar',
+    data: data,
+    options: {
+      responsive: false
+    },
+    scales: [{
+      ticks: {
+        beginAtZero: true
+      }
+    }]
+  });
+}
+
+// function imgtallySelection(){
+//   console.log('imgtallySelection');
+//   for (var i = 0; i < itemCatalog.length; i++) {
+//     var listEl = document.createElement('li');
+//     listEl.textContent = itemCatalog[i].image + ' appeared ' + itemCatalog[i].totalDisplayed + ' times, and was chosen ' + itemCatalog[i].totalClicks + ' times.';
+//     results.appendChild(listEl);
+//   }
+// }
 
 function userSelection(){
+  console.log('userSelection');
   var userChoice = event.target.id;
   console.log(userChoice);
   if (userChoice === 'left'){
     console.log('User chose left item.');
     itemVote += 1;
-    console.log('This is round ' + (parseInt(itemVote) + 1));
+    console.log('This is round ' + itemVote + 1);
     itemCatalog[indexOne].totalClicks += 1;
     console.log(itemCatalog[indexOne].image + ' chosen ' + itemCatalog[indexOne].totalClicks + ' times.');
   }
   else if (userChoice === 'center'){
     console.log('User chose center item.');
     itemVote += 1;
-    console.log('This is round ' + (parseInt(itemVote) + 1));
+    console.log('This is round ' + itemVote + 1);
     itemCatalog[indexTwo].totalClicks += 1;
     console.log(itemCatalog[indexTwo].image + ' chosen ' + itemCatalog[indexTwo].totalClicks + ' times.');
   }
   else if (userChoice === 'right'){
     console.log('User chose right item.');
     itemVote += 1;
-    console.log('This is round ' + (parseInt(itemVote) + 1));
+    console.log('This is round ' + itemVote + 1);
     itemCatalog[indexThree].totalClicks += 1;
     console.log(itemCatalog[indexThree].image + ' chosen ' + itemCatalog[indexThree].totalClicks + ' times.');
   }
-  else {
+  else {//good here
     alert('Please select one of the images.');
   }
   if (itemVote < 25) {
@@ -107,7 +159,8 @@ function userSelection(){
     var button = document.createElement('button');
     button.textContent = 'Survey completed. Please select here.';
     threePics.appendChild(button);
-    button.addEventListener('click',userSelection);
+    chartFiller();
+    button.addEventListener('click',chartDrawing);
   }
 }
 
