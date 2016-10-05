@@ -2,6 +2,7 @@ body {
   margin: 0 auto;
   height: auto;
   font-family: Helvetica, sans-serif;
+  max-width: 960px;
 }
 
 header {
