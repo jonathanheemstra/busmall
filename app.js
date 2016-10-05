@@ -77,6 +77,7 @@ function pictureRandomize(){
   }
   console.log(indexOne, indexTwo, indexThree);
 
+  indexSave = [];
   indexSave.push(indexOne);
   indexSave.push(indexTwo);
   indexSave.push(indexThree);
@@ -85,7 +86,6 @@ function pictureRandomize(){
   lastItemIndex.push(indexOne);
   lastItemIndex.push(indexTwo);
   lastItemIndex.push(indexThree);
-  indexSave = [];
 
   imgLeft.src = itemCatalog[indexOne].filePath;
   imgLeft.alt = itemCatalog[indexOne].image;
@@ -94,10 +94,9 @@ function pictureRandomize(){
   imgRight.src = itemCatalog[indexThree].filePath;
   imgRight.alt = itemCatalog[indexThree].image;
 
-  itemCatalog[indexOne].totalDisplayed += itemCatalog[indexOne].totalDisplayed;
-  itemCatalog[indexTwo].totalDisplayed += itemCatalog[indexTwo].totalDisplayed;
-  itemCatalog[indexThree].totalDisplayed +=
-  itemCatalog[indexThree].totalDisplayed;
+  itemCatalog[indexOne].totalDisplayed += 1;
+  itemCatalog[indexTwo].totalDisplayed += 1;
+  itemCatalog[indexThree].totalDisplayed += 1;
 }
 
 function chartFiller(){
@@ -185,6 +184,7 @@ function userSelection(event){
     threePics.appendChild(button);
     chartFiller();
     button.addEventListener('click',chartDrawing);
+    console.table(itemCatalog);//displays table of array in the console for easy reading!!!
   }
 }
 
